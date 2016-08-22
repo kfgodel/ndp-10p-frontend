@@ -1,7 +1,8 @@
 import Ember from "ember";
 import ProyectoRepoInjected from "../mixins/proyecto-repository-injected";
+import MessagerInjected from "ateam-ember-messager/mixins/messager-injected";
 
-export default Ember.Controller.extend(ProyectoRepoInjected, {
+export default Ember.Controller.extend(ProyectoRepoInjected, MessagerInjected, {
 
   init(){
     this._super(...arguments);
@@ -24,11 +25,13 @@ export default Ember.Controller.extend(ProyectoRepoInjected, {
       this.repo().createProyecto(nuevoProyecto).then(proyectoGuardado => {
         this._limpiarFormulario();
         this._cargarProyectos();
+        this._notificarCambiosAProyectos();
       });
     },
     borrarProyecto(proyecto){
       this.repo().removeProyecto(proyecto).then(()=> {
         this._cargarProyectos();
+        this._notificarCambiosAProyectos();
       });
     }
   },
@@ -37,6 +40,10 @@ export default Ember.Controller.extend(ProyectoRepoInjected, {
     this.repo().getAllProyectos().then(proyectos => {
       this.set('proyectos', proyectos);
     });
+  },
+
+  _notificarCambiosAProyectos(){
+    this.messager().publish({type: 'proyectosCambiados'});
   }
 
 });
