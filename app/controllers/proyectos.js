@@ -22,7 +22,7 @@ export default Ember.Controller.extend(ProyectoRepoInjected, MessagerInjected, {
   actions: {
     crearProyecto(){
       var nuevoProyecto = this.get('proyecto');
-      this.repo().createProyecto(nuevoProyecto).then(proyectoGuardado => {
+      this.repo().createProyecto(nuevoProyecto).then(() => {
         this._limpiarFormulario();
         this._cargarProyectos();
         this._notificarCambiosAProyectos();

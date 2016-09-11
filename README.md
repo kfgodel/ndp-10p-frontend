@@ -12,6 +12,7 @@ You will need the following things properly installed on your computer.
 * [Bower](http://bower.io/)
 * [Ember CLI](http://ember-cli.com/)
 * [PhantomJS](http://phantomjs.org/)
+* [Tests con mocha](https://echobind.com/blog/move-your-ember-tests-to-mocha/)
 
 ## Installation
 

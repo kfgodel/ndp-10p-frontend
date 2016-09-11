@@ -6,7 +6,7 @@ export default Ember.Component.extend(ProyectoRepoInjected, MessagerInjected, {
   init(){
     this._super(...arguments);
     this._actualizarElementosDisponibles();
-    this.messager().subscribe({type: 'proyectosCambiados'}, (message)=> {
+    this.messager().subscribe({type: 'proyectosCambiados'}, ()=> {
       this._actualizarElementosDisponibles();
     });
   },

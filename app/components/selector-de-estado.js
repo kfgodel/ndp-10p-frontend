@@ -6,6 +6,6 @@ export default Ember.Component.extend(ProyectoRepoInjected, {
     this._super(...arguments);
     this.repo().getAllEstados().then((estados) => {
       this.set('estadosDisponibles', estados);
-    })
+    });
   }
 });
