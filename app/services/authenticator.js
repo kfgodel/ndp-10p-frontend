@@ -52,11 +52,35 @@ export default Ember.Service.extend({
 
   _engageServerSession(){
     new ServerInteraction(this._session().recoverSession())
-      .whenSucceeded(Ember.run.bind(this, this._onSessionAvailable))
+      .whenSucceeded(Ember.run.bind(this, this._onSessionRecovered))
       .whenUnauthorized(Ember.run.bind(this, this._onSessionMissing))
-      .whenFailed(Ember.run.bind(this, this._onRequestError));
+      .whenFailed(Ember.run.bind(this, this._onSessionError));
   },
-  _onSessionAvailable(){
+  _onSessionRecovered(){
+    this._finishLogin();
+  },
+  _onSessionMissing(){
+    this._beginLogin();
+  },
+  _onSessionError(response){
+    // Display the error. Probably nothing else to do on our side. Server down?
+    this._state().changeStateMessageTo(`${response.status} - ${response.statusText}`);
+  },
+  _onUserLoggedIn(){
+    this._finishLogin();
+  },
+  _onUserLoggedOut(){
+    this._beginLogin();
+  },
+  _onFailedLogout(response){
+    console.log("Error logging out");
+    console.log(response);
+  },
+  _beginLogin(){
+    this._state().markAsNotAuthenticated();
+    this._navigator().goToLoginScreen();
+  },
+  _finishLogin(){
     this._state().markAsAuthenticated();
     var pendingAction = this._getActionAfterAuthentication();
     pendingAction();
@@ -69,22 +93,5 @@ export default Ember.Service.extend({
     }
     return pendingAction;
   },
-  _onSessionMissing(){
-    this._navigator().goToLoginScreen();
-  },
-  _onRequestError(response){
-    // Display the error. Probably nothing else to do on our side. Server down?
-    this._state().changeStateMessageTo(`${response.status} - ${response.statusText}`);
-  },
-  _onUserLoggedIn(){
-    this._onSessionAvailable();
-  },
-  _onUserLoggedOut(){
-    this._state().markAsNotAuthenticated();
-    this._navigator().goToLoginScreen();
-  },
-  _onFailedLogout(response){
-    console.log("Error logging out");
-    console.log(response);
-  },
+
 });

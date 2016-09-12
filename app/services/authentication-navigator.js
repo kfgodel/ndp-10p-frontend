@@ -12,6 +12,6 @@ export default Ember.Service.extend(NavigatorInjected, {
   getDefaultActionAfterLogin(){
     return ()=> {
       this.navigator().navigateToIndex();
-    }
+    };
   },
 });
