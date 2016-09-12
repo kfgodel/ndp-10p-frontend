@@ -1,99 +1,89 @@
 import Ember from "ember";
 import ServerInteraction from "ateam-ember-resource/rest/server-interaction";
-import NavigatorInjected from "../mixins/navigator-injected";
 import AuthenticationState from "../auth/authentication-state";
 
-export default Ember.Service.extend(NavigatorInjected, {
+export default Ember.Service.extend({
   authenticationState: AuthenticationState.create(),
   actionAfterAuthentication: null,
+
   ifNotAuthenticated(action){
-    if (this.state().isUnauthenticated()) {
+    if (this._state().isUnauthenticated()) {
       action();
     }
   },
   afterAuthentication(actionAfterAuthentication){
     this.set('actionAfterAuthentication', actionAfterAuthentication);
   },
-  authenticate(){
-    this.engageServerSession();
-    return this.state();
+  startSessionRecovery(){
+    this._engageServerSession();
+    return this._state();
   },
   login(credentials){
-    var loginUrl = this.locator().loginUrl();
-    return Ember.$.post(loginUrl, {
-      j_username: credentials.login,
-      j_password: credentials.password
-    })
-      .then(Ember.run.bind(this, this.onUserLoggedIn));
+    return this._session()
+      .beginSession(credentials)
+      .then(Ember.run.bind(this, this._onUserLoggedIn));
   },
   logout(){
-    Ember.$.post("/j_logout", {})
+    this._session()
+      .endSession()
       .then(
-        Ember.run.bind(this, this.onUserLoggedOut),
-        Ember.run.bind(this, this.onFailedLogout)
+        Ember.run.bind(this, this._onUserLoggedOut),
+        Ember.run.bind(this, this._onFailedLogout)
       );
   },
   reauthenticateAndThen(action){
-    this.state().markAsNotAuthenticated();
+    this._state().markAsNotAuthenticated();
     this.afterAuthentication(action);
-    this.makeUserLogin();
+    this._navigator().goToLoginScreen();
   },
 
   // PRIVATE
-  state(){
+  _state(){
     return this.get('authenticationState');
   },
-  resourceLocator: Ember.inject.service('resource-locator'),
-  locator(){
-    return this.get('resourceLocator');
+  _sessionRequester: Ember.inject.service('backend-session-requester'),
+  _session(){
+    return this.get('_sessionRequester');
   },
-  engageServerSession(){
-    var sessionUrl = this.locator().resourceUrl('session');
-    new ServerInteraction(
-      Ember.$.ajax({
-        method: 'GET',
-        url: sessionUrl,
-      })
-    ).whenSucceeded(Ember.run.bind(this, this.onSessionAvailable))
-      .whenUnauthorized(Ember.run.bind(this, this.onSessionMissing))
-      .whenFailed(Ember.run.bind(this, this.onRequestError));
+  _authenticationNavigator: Ember.inject.service('authentication-navigator'),
+  _navigator(){
+    return this.get('_authenticationNavigator');
   },
-  onSessionAvailable(){
-    this.state().markAsAuthenticated();
-    var pendingAction = this.postAuthenticationAction();
+
+  _engageServerSession(){
+    new ServerInteraction(this._session().recoverSession())
+      .whenSucceeded(Ember.run.bind(this, this._onSessionAvailable))
+      .whenUnauthorized(Ember.run.bind(this, this._onSessionMissing))
+      .whenFailed(Ember.run.bind(this, this._onRequestError));
+  },
+  _onSessionAvailable(){
+    this._state().markAsAuthenticated();
+    var pendingAction = this._getActionAfterAuthentication();
     pendingAction();
   },
-  postAuthenticationAction(){
+  _getActionAfterAuthentication(){
     var pendingAction = this.get('actionAfterAuthentication');
     this.set('actionAfterAuthentication', null);
     if (pendingAction == null) {
-      pendingAction = this.defaultPostAuthenticationAction();
+      pendingAction = this._navigator().getDefaultActionAfterLogin();
     }
     return pendingAction;
   },
-  onSessionMissing(){
-    this.makeUserLogin();
+  _onSessionMissing(){
+    this._navigator().goToLoginScreen();
   },
-  onRequestError(response){
+  _onRequestError(response){
     // Display the error. Probably nothing else to do on our side. Server down?
-    this.state().changeStateMessageTo(`${response.status} - ${response.statusText}`);
+    this._state().changeStateMessageTo(`${response.status} - ${response.statusText}`);
   },
-  makeUserLogin(){
-    this.navigator().navigateToLogin();
+  _onUserLoggedIn(){
+    this._onSessionAvailable();
   },
-  defaultPostAuthenticationAction(){
-    return ()=> {
-      this.navigator().navigateToIndex();
-    };
+  _onUserLoggedOut(){
+    this._state().markAsNotAuthenticated();
+    this._navigator().goToLoginScreen();
   },
-  onUserLoggedIn(){
-    this.onSessionAvailable();
-  },
-  onUserLoggedOut(){
-    this.state().markAsNotAuthenticated();
-    this.makeUserLogin();
-  },
-  onFailedLogout(response){
+  _onFailedLogout(response){
     console.log("Error logging out");
     console.log(response);
   },

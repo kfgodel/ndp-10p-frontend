@@ -16,6 +16,9 @@ export default Ember.Service.extend({
   loginUrl(){
     return "/j_security_check";
   },
+  logoutUrl(){
+    return "/j_logout";
+  },
 
   // PRIVATE
   context: '/api/v1',
