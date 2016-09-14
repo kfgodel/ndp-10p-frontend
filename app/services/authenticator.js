@@ -6,16 +6,19 @@ export default Ember.Service.extend({
   authenticationState: AuthenticationState.create(),
   actionAfterAuthentication: null,
 
-  ifNotAuthenticated(action){
-    if (this._state().isUnauthenticated()) {
-      action();
+
+  authenticateIfNeededAndThen(actionAfterAuthentication){
+    if (this._state().isAuthenticated()) {
+      // No need to authenticate
+      return;
     }
+    this._afterAuthentication(actionAfterAuthentication);
+    // By sending the user to engage screen we start the recovery process
+    this._navigator().goToSessionRecoveryScreen();
   },
-  afterAuthentication(actionAfterAuthentication){
-    this.set('actionAfterAuthentication', actionAfterAuthentication);
-  },
+
   startSessionRecovery(){
-    this._engageServerSession();
+    this._ensureCurrentSession();
     return this._state();
   },
   login(credentials){
@@ -32,9 +35,8 @@ export default Ember.Service.extend({
       );
   },
   reauthenticateAndThen(action){
-    this._state().markAsNotAuthenticated();
-    this.afterAuthentication(action);
-    this._navigator().goToLoginScreen();
+    this._afterAuthentication(action);
+    this._beginAuthentication();
   },
 
   // PRIVATE
@@ -50,37 +52,37 @@ export default Ember.Service.extend({
     return this.get('_authenticationNavigator');
   },
 
-  _engageServerSession(){
-    new ServerInteraction(this._session().recoverSession())
+  _ensureCurrentSession(){
+    new ServerInteraction(this._session().getCurrentSession())
       .whenSucceeded(Ember.run.bind(this, this._onSessionRecovered))
       .whenUnauthorized(Ember.run.bind(this, this._onSessionMissing))
       .whenFailed(Ember.run.bind(this, this._onSessionError));
   },
   _onSessionRecovered(){
-    this._finishLogin();
+    this._completeAuthentication();
   },
   _onSessionMissing(){
-    this._beginLogin();
+    this._beginAuthentication();
   },
   _onSessionError(response){
     // Display the error. Probably nothing else to do on our side. Server down?
     this._state().changeStateMessageTo(`${response.status} - ${response.statusText}`);
   },
   _onUserLoggedIn(){
-    this._finishLogin();
+    this._completeAuthentication();
   },
   _onUserLoggedOut(){
-    this._beginLogin();
+    this._beginAuthentication();
   },
   _onFailedLogout(response){
     console.log("Error logging out");
     console.log(response);
   },
-  _beginLogin(){
+  _beginAuthentication(){
     this._state().markAsNotAuthenticated();
     this._navigator().goToLoginScreen();
   },
-  _finishLogin(){
+  _completeAuthentication(){
     this._state().markAsAuthenticated();
     var pendingAction = this._getActionAfterAuthentication();
     pendingAction();
@@ -89,9 +91,15 @@ export default Ember.Service.extend({
     var pendingAction = this.get('actionAfterAuthentication');
     this.set('actionAfterAuthentication', null);
     if (pendingAction == null) {
-      pendingAction = this._navigator().getDefaultActionAfterLogin();
+      pendingAction = ()=> {
+        this._navigator().goToInitialScreen();
+      }
     }
     return pendingAction;
   },
+  _afterAuthentication(actionAfterAuthentication){
+    this.set('actionAfterAuthentication', actionAfterAuthentication);
+  },
+
 
 });

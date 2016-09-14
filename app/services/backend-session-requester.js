@@ -16,7 +16,7 @@ export default Ember.Service.extend({
     var logoutUrl = this._locator().logoutUrl();
     return Ember.$.post(logoutUrl, {});
   },
-  recoverSession(){
+  getCurrentSession(){
     var sessionUrl = this._locator().resourceUrl('session');
     return Ember.$.ajax({
       method: 'GET',

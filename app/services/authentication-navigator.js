@@ -9,9 +9,13 @@ export default Ember.Service.extend(NavigatorInjected, {
   goToLoginScreen(){
     this.navigator().navigateToLogin();
   },
-  getDefaultActionAfterLogin(){
-    return ()=> {
-      this.navigator().navigateToIndex();
-    };
+
+  goToInitialScreen(){
+    this.navigator().navigateToIndex();
   },
+
+  goToSessionRecoveryScreen(){
+    this.navigator().navigateToEngageSession();
+  }
+
 });
