@@ -1,5 +1,5 @@
 import Ember from "ember";
-import AuthenticatorInjected from "./authenticator-injected";
+import AuthenticatorInjected from "ateam-ember-authenticator/mixins/authenticator-injected";
 
 /**
  * This Mixin adds behavior and injection to access repositories.

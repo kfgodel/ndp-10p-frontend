@@ -1,5 +1,5 @@
 import Ember from "ember";
-import AuthenticatorInjected from "../mixins/authenticator-injected";
+import AuthenticatorInjected from "ateam-ember-authenticator/mixins/authenticator-injected";
 
 
 export default Ember.Route.extend(AuthenticatorInjected, {
