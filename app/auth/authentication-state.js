@@ -18,7 +18,4 @@ export default Ember.Object.extend({
   isAuthenticated(){
     return this.get('authenticated');
   },
-  isUnauthenticated(){
-    return !this.isAuthenticated();
-  }
 });
