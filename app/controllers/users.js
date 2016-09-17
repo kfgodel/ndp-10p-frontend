@@ -30,7 +30,7 @@ export default Ember.Controller.extend(UserRepositoryInjected, MessagerInjected,
     this.navigator().navigateToUsers();
   },
   init(){
-    this._super();
+    this._super(...arguments);
     this.messager().subscribe({type: 'userRemoved'}, (message)=> {
       this.onUserRemoved(message.removedUser);
     });

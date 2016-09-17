@@ -3,22 +3,23 @@ import EmberResource from "ateam-ember-resource/rest/ember-resource";
 
 export default Ember.Object.extend({
   getAllUsers: function () {
-    return this._proyectoResource().getAll();
+    return this._userResource().getAll();
   },
   createUser: function () {
-    return this._proyectoResource().create();
+    return this._userResource().create();
   },
   getUser: function (userId) {
-    return this._proyectoResource().getSingle(userId);
+    return this._userResource().getSingle(userId);
   },
   updateUser: function (user) {
-    return this._proyectoResource().update(user);
+    return this._userResource().update(user);
   },
   removeUser: function (user) {
-    return this._proyectoResource().remove(user);
+    return this._userResource().remove(user);
   },
   // PRIVATE
-  _proyectoResource: function () {
+  resourceLocator: Ember.inject.service("resource-locator"),
+  _userResource: function () {
     return EmberResource.create({resourceName: 'users', resourceLocator: this.get('resourceLocator')});
   },
 });

@@ -1,8 +1,8 @@
 import Ember from "ember";
-import ProyectoRepoInjected from "../mixins/proyecto-repository-injected";
+import ElementoServiceInjected from "../mixins/elemento-service-injected";
 import MessagerInjected from "ateam-ember-messager/mixins/messager-injected";
 
-export default Ember.Component.extend(ProyectoRepoInjected, MessagerInjected, {
+export default Ember.Component.extend(ElementoServiceInjected, MessagerInjected, {
   init(){
     this._super(...arguments);
     this._actualizarElementosDisponibles();
@@ -16,7 +16,7 @@ export default Ember.Component.extend(ProyectoRepoInjected, MessagerInjected, {
   },
 
   _actualizarElementosDisponibles: function () {
-    this.repo().getAllElementos().then((elementos) => {
+    this.elementoService().getAllElementos().then((elementos) => {
       this.set('elementosDisponibles', elementos);
     });
   },

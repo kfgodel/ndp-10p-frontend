@@ -2,6 +2,6 @@ import Ember from "ember";
 
 export default Ember.Route.extend({
   model: function () {
-    return {login: '', password: ''};
+    return Ember.Object.create({login: '', password: ''});
   }
 });

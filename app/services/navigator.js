@@ -21,6 +21,13 @@ export default Ember.Service.extend({
     this.navigateTo('proyectos');
   },
 
+  navigateToUsers(){
+    this.navigateTo('users');
+  },
+  navigateToUsersEdit(user){
+    this.navigateTo('users.edit', user);
+  },
+
   // PRIVATE
   _transitionerService: Ember.inject.service('transitioner'), // Router made as a service
   transitioner(){

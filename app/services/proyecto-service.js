@@ -1,7 +1,11 @@
 import Ember from "ember";
 import EmberResource from "ateam-ember-resource/rest/ember-resource";
 
-export default Ember.Object.extend({
+/**
+ * Esta clase permite interactuar con el backend para modificar los proyectos
+ */
+export default Ember.Service.extend({
+
   getAllProyectos: function () {
     return this._proyectoResource().getAll();
   },
@@ -18,22 +22,10 @@ export default Ember.Object.extend({
     return this._proyectoResource().remove(user);
   },
 
-  getAllEstados: function () {
-    return this._estadoResource().getAll();
-  },
-  getAllElementos: function () {
-    return this._elementoResource().getAll();
-  },
-
-
   // PRIVATE
+  resourceLocator: Ember.inject.service("resource-locator"),
   _proyectoResource: function () {
     return EmberResource.create({resourceName: 'proyectos', resourceLocator: this.get('resourceLocator')});
   },
-  _estadoResource: function () {
-    return EmberResource.create({resourceName: 'proyectos/estados', resourceLocator: this.get('resourceLocator')});
-  },
-  _elementoResource: function () {
-    return EmberResource.create({resourceName: 'proyectos/elementos', resourceLocator: this.get('resourceLocator')});
-  },
+
 });

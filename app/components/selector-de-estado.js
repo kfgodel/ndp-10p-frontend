@@ -1,10 +1,10 @@
 import Ember from "ember";
-import ProyectoRepoInjected from "../mixins/proyecto-repository-injected";
+import EstadoServiceInjected from "../mixins/estado-service-injected";
 
-export default Ember.Component.extend(ProyectoRepoInjected, {
+export default Ember.Component.extend(EstadoServiceInjected, {
   init(){
     this._super(...arguments);
-    this.repo().getAllEstados().then((estados) => {
+    this.estadoService().getAllEstados().then((estados) => {
       this.set('estadosDisponibles', estados);
     });
   }
