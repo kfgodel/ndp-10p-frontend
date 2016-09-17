@@ -1,10 +1,11 @@
 import Ember from "ember";
 import EmberResource from "ateam-ember-resource/rest/ember-resource";
+import ResourceLocatorInjected from "ateam-ember-authenticator/mixins/resource-locator-injected";
 
 /**
  * Esta clase permite interactuar con el backend para modificar los proyectos
  */
-export default Ember.Service.extend({
+export default Ember.Service.extend(ResourceLocatorInjected, {
 
   getAllProyectos: function () {
     return this._proyectoResource().getAll();
@@ -23,9 +24,8 @@ export default Ember.Service.extend({
   },
 
   // PRIVATE
-  resourceLocator: Ember.inject.service("resource-locator"),
   _proyectoResource: function () {
-    return EmberResource.create({resourceName: 'proyectos', resourceLocator: this.get('resourceLocator')});
+    return EmberResource.create({resourceName: 'proyectos', resourceLocator: this.resourceLocator()});
   },
 
 });

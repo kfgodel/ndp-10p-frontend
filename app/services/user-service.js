@@ -1,7 +1,12 @@
 import Ember from "ember";
 import EmberResource from "ateam-ember-resource/rest/ember-resource";
+import ResourceLocatorInjected from "ateam-ember-authenticator/mixins/resource-locator-injected";
 
-export default Ember.Object.extend({
+/**
+ * Esta clase permite interactuar con el backend para modificar los usuarios
+ */
+export default Ember.Service.extend(ResourceLocatorInjected, {
+
   getAllUsers: function () {
     return this._userResource().getAll();
   },
@@ -18,8 +23,8 @@ export default Ember.Object.extend({
     return this._userResource().remove(user);
   },
   // PRIVATE
-  resourceLocator: Ember.inject.service("resource-locator"),
   _userResource: function () {
-    return EmberResource.create({resourceName: 'users', resourceLocator: this.get('resourceLocator')});
+    return EmberResource.create({resourceName: 'users', resourceLocator: this.resourceLocator()});
   },
+
 });
