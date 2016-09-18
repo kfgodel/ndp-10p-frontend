@@ -2,8 +2,9 @@ import Ember from "ember";
 import UserServiceInjected from "../../mixins/user-service-injected";
 import MessagerInjected from "ateam-ember-messager/mixins/messager-injected";
 import AuthenticatorInjected from "ateam-ember-authenticator/mixins/authenticator-injected";
+import NavigatorInjected from "../../mixins/navigator-injected";
 
-export default Ember.Controller.extend(UserServiceInjected, MessagerInjected, AuthenticatorInjected, {
+export default Ember.Controller.extend(UserServiceInjected, MessagerInjected, AuthenticatorInjected, NavigatorInjected, {
   actions: {
     save: function () {
       this.promiseWaitingFor(this.userService().updateUser(this.user()))
@@ -18,17 +19,15 @@ export default Ember.Controller.extend(UserServiceInjected, MessagerInjected, Au
   },
 
   // PRIVATE
-  usersController: Ember.inject.controller('users'),
   user: function () {
     return this.get('model');
   },
   onUserUpdated: function (updatedUser) {
     this.user().setProperties(updatedUser);
-    this.transitionToRoute('users');
+    this.navigator().navigateToUsers();
   },
   onUserRemoved: function () {
     this.messager().publish({type: 'userRemoved', removedUser: this.user()});
-    //this.get('usersController').onUserRemoved(this.user());
     this.navigator().navigateToUsers();
   },
   onReauthenticated(){

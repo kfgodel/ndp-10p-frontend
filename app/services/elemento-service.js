@@ -1,19 +1,20 @@
 import Ember from "ember";
-import EmberResource from "ateam-ember-resource/rest/ember-resource";
-import ResourceLocatorInjected from "ateam-ember-authenticator/mixins/resource-locator-injected";
+import EmberizedResourceCreatorInjected from "ateam-ember-resource/mixins/emberized-resource-creator-injected";
 
 /**
  * Esta clase permite interactuar con el backend para modificar los elementos
  */
-export default Ember.Service.extend(ResourceLocatorInjected, {
+export default Ember.Service.extend(EmberizedResourceCreatorInjected, {
 
-  getAllElementos: function () {
+  getAllElementos() {
     return this._elementoResource().getAll();
   },
 
   // PRIVATE
-  _elementoResource: function () {
-    return EmberResource.create({resourceName: 'proyectos/elementos', resourceLocator: this.resourceLocator()});
+  _elementoResource() {
+    var resourceCreator = this.resourceCreator();
+    var resource = resourceCreator.createResource('proyectos/elementos');
+    return resource;
   },
 
 });

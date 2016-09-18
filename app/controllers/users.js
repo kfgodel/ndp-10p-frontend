@@ -2,8 +2,9 @@ import Ember from "ember";
 import UserServiceInjected from "../mixins/user-service-injected";
 import MessagerInjected from "ateam-ember-messager/mixins/messager-injected";
 import AuthenticatorInjected from "ateam-ember-authenticator/mixins/authenticator-injected";
+import NavigatorInjected from "../mixins/navigator-injected";
 
-export default Ember.Controller.extend(UserServiceInjected, MessagerInjected, AuthenticatorInjected, {
+export default Ember.Controller.extend(UserServiceInjected, MessagerInjected, AuthenticatorInjected, NavigatorInjected, {
   actions: {
     create: function () {
       this.promiseWaitingFor(this.userService().createUser())
