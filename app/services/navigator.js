@@ -1,39 +1,36 @@
 import Ember from "ember";
+import TransitionerInjected from "ateam-ember-supplement/mixins/transitioner-injected";
 
 /**
  * This type represents the application navigator that knows how to navigate to different sections of the applications
  * requiring the needed arguments in each case.
  *   This class abstracts ember routes and adds semantic specific to this app
  */
-export default Ember.Service.extend({
+export default Ember.Service.extend(TransitionerInjected, {
 
   navigateToEngageSession(){
-    this.navigateTo('engaging-session');
+    this._navigateTo('engaging-session');
   },
   navigateToLogin(){
-    this.navigateTo('login');
+    this._navigateTo('login');
   },
   navigateToIndex(){
-    this.navigateTo('index');
+    this._navigateTo('index');
   },
 
   navigateToProyectos(){
-    this.navigateTo('proyectos');
+    this._navigateTo('proyectos');
   },
 
   navigateToUsers(){
-    this.navigateTo('users');
+    this._navigateTo('users');
   },
   navigateToUsersEdit(user){
-    this.navigateTo('users.edit', user);
+    this._navigateTo('users.edit', user);
   },
 
   // PRIVATE
-  _transitionerService: Ember.inject.service('transitioner'), // Router made as a service
-  transitioner(){
-    return this.get('_transitionerService');
-  },
-  navigateTo(routeName, models, queryParams){
+  _navigateTo(routeName, models, queryParams){
     this.transitioner().transitionTo(routeName, models, queryParams);
   }
 });
