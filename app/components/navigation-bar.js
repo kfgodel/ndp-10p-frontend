@@ -4,7 +4,6 @@ import Application from "../concepts/application";
 
 export default Ember.Component.extend(AuthenticatorInjected, {
   tagName: 'nav',
-  classNames: ['navbar', 'navbar-default', 'navbar-fixed-top'],
   application: Application.create(),
   actions: {
     logout: function () {

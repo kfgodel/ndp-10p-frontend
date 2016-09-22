@@ -1,39 +1,13 @@
-<div class="container-fluid">
+<div class="nav-wrapper">
+  {{#link-to 'proyectos' classNames="brand-logo"}}Proyectos{{/link-to}}
 
-  <!-- Logo space -->
-  <div class="navbar-header">
-    <!-- Responsive collapsible menu -->
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-            aria-expanded="false" aria-controls="navbar">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <span class="navbar-brand">{{application.displayName}}</span>
-  </div>
-
-  <!-- Navigation options -->
-  <div id="navbar" class="navbar-collapse collapse">
-
-    <ul class="nav navbar-nav">
-      <li>{{#link-to 'proyectos'}}Proyectos{{/link-to}}</li>
-    </ul>
-
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Opciones<span
-          class="caret"></span></a>
-
-        <ul class="dropdown-menu" role="menu">
-          <li class="dropdown-header">Usuarios</li>
-          <li>{{#link-to 'users'}}Administrar{{/link-to}}</li>
-          <li class="divider"></li>
-          <li><a href="#" {{action "logout"}}>Salir</a></li>
-        </ul>
-      </li>
-    </ul>
-
-  </div>
+  <ul class="right">
+  <li>
+    {{#tenpines/drop-down label='Opciones' icon='arrow_drop_down' iconToTheRight=true removeBtn=true }}
+      <li>{{#link-to 'users'}}Usuarios{{/link-to}}</li>
+      <li><a href="#" {{action "logout"}}>Salir</a></li>
+    {{/tenpines/drop-down }}
+    </li>
+  </ul>
 
 </div>
