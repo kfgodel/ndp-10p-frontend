@@ -10,20 +10,11 @@
 
   <!-- User list -->
   <div class="col s8">
-    <button class="btn" {{action "create"}}>Crear nuevo</button>
 
-    <table class="table striped">
-      <thead>
-      <tr>
-        <th>Id</th>
-        <th>Nombre</th>
-        <th>Login</th>
-        <th>Password</th>
-      </tr>
-      </thead>
+    {{tenpines/material-button label='Crear nuevo' click=(action 'create') }}
 
-      <tbody>
-      {{#each model as |user| }}
+    {{#tenpines/object-table titulos='Id, Nombre, Login, Password' striped=true}}
+      {{#each model as |user|}}
         <tr>
           <td>{{#link-to 'users.edit' user}}{{user.id}}{{/link-to}}</td>
           <td>{{#link-to 'users.edit' user}}{{user.name}}{{/link-to}}</td>
@@ -35,17 +26,8 @@
           <td colspan="4">No users found</td>
         </tr>
       {{/each}}
-      </tbody>
+    {{/tenpines/object-table}}
 
-      <tfoot>
-      <tr>
-        <td>Total</td>
-        <td></td>
-        <td></td>
-        <td>{{model.length}}</td>
-      </tr>
-      </tfoot>
-    </table>
   </div>
 
   <!-- User edit form -->

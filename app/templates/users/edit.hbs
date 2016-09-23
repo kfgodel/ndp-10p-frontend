@@ -1,13 +1,11 @@
-{{labeled-label label='Id:' value=model.id}}
-{{input class="form-control" placeholder="nombre" value=model.name}}
-{{input class="form-control" placeholder="login name" value=model.login}}
-{{input class="form-control" placeholder="password" value=model.password}}
-{{labeled-label label='Creado:' value=model.creation}}
-{{labeled-label label='Editado:' value=model.modification}}
+{{tenpines/labeled-label label='ID' value=model.id }}
+{{tenpines/input-text label='Nombre' value=model.name }}
+{{tenpines/input-text label='Login' value=model.login }}
+{{tenpines/input-text label='Password' value=model.password }}
+{{tenpines/labeled-label label='Creado' value=model.creation }}
+{{tenpines/labeled-label label='Editado' value=model.modification }}
 
-<p>
-<p class="property-input">
-  <button class="btn btn-success" {{action "save"}}>Guardar</button>
-  <button class="btn btn-danger" {{action "remove"}}>Eliminar</button>
-</p>
-</p>
+<div class="right">
+  {{tenpines/material-button label='Eliminar' click=(action 'remove') flat=true }}
+  {{tenpines/material-button label='Guardar' click=(action 'save') }}
+</div>
