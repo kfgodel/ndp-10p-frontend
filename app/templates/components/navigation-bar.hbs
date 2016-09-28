@@ -1,10 +1,11 @@
 <div class="nav-wrapper">
-  {{#link-to 'proyectos' classNames="brand-logo"}}Proyectos{{/link-to}}
+  {{#link-to 'proyectos' classNames="brand-logo"}}{{application.displayName}}{{/link-to}}
 
   <ul class="right">
   <li>
     {{#tenpines/drop-down label='Opciones' icon='arrow_drop_down' iconToTheRight=true removeBtn=true }}
       <li>{{#link-to 'users'}}Usuarios{{/link-to}}</li>
+      <li class="divider"></li>
       <li><a href="#" {{action "logout"}}>Salir</a></li>
     {{/tenpines/drop-down }}
     </li>
