@@ -3,10 +3,8 @@
     <form class="form-signin {{if errorMessage "has-error"}}">
       <h2 class="form-signin-heading">{{application.displayName}}</h2>
 
-      {{input class="form-control" placeholder="login name"
-      value=model.login}}
-      {{input class="form-control" placeholder="password" type="password"
-      value=model.password enter="logIn"}}
+      {{tenpines/input-text label='Login name' value=model.login}}
+      {{tenpines/input-password label='Password' value=model.password enter="logIn"}}
       {{#if errorMessage}}
         <span class="help-block">{{errorMessage}}</span>
       {{/if}}
